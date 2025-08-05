@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+// src/App.js
+import React from 'react'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { publicRoute } from './routes'
+import { DefaultLayout, HeaderOnly } from '~/Component/layout'
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Router>
+      <div className="App">
+        <Routes>
+          {publicRoute.map((route, index) => {
+            // Destructure từ route
+            const { path, component: Page, layout } = route
+
+            // Chọn Layout phù hợp
+            let LayoutComponent
+            if (layout === null) {
+              LayoutComponent = React.Fragment
+            } else if (layout === HeaderOnly) {
+              LayoutComponent = HeaderOnly
+            } else {
+              LayoutComponent = DefaultLayout
+            }
+
+            return (
+              <Route
+                key={index}
+                path={path}
+                element={
+                  <LayoutComponent>
+                    <Page />
+                  </LayoutComponent>
+                }
+              />
+            )
+          })}
+        </Routes>
+      </div>
+    </Router>
+  )
 }
 
-export default App;
+export default App
